@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClinicPulse — WhatsApp Follow-Up Bot</title>
+  <meta name="description" content="Automated WhatsApp patient follow-up system for clinics. Improve patient retention and reduce no-shows with intelligent follow-up messaging." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Navbar ───────────────────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar-brand">
+      <div class="logo-icon" aria-hidden="true">💬</div>
+      <div class="logo-text">
+        <h1>ClinicPulse</h1>
+        <span>WhatsApp Follow-Up Bot</span>
+      </div>
+      <img id="clinicLogo" src="" alt="Clinic Logo" class="clinic-logo" style="height:32px; margin-left:8px; display:none;" />
+      <span id="clinicVerified" class="verified-badge" style="margin-left:4px; color:var(--accent-green); display:none;">✔️</span>
+    </div>
+
+    <div class="navbar-status" id="connectionStatus" role="status" aria-live="polite">
+      <div class="status-dot"></div>
+      <span id="statusText">System Online</span>
+    </div>
+
+    <div class="navbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="openSetupModal()" id="setupBtn" aria-label="Open Twilio setup guide">
+        ⚙️ Twilio Setup
+      </button>
+      <div class="flex-center gap-2 fs-12 text-muted">
+        <span id="twilioMode">Demo Mode</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main Content ──────────────────────────────────────────────────────── -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Mode Banner -->
+    <div id="modeBanner" class="demo-banner" role="alert">
+      <div class="wa-icon" aria-hidden="true">💬</div>
+      <div>
+        <strong>Demo Mode Active</strong> — Messages are simulated. Add your Twilio credentials to send real WhatsApp messages.
+        <a href="#" onclick="openSetupModal(); return false;" style="color: var(--accent-amber); margin-left: 6px; font-weight: 600;">Setup Guide →</a>
+      </div>
+    </div>
+
+    <!-- ── Analytics Cards ────────────────────────────────────────────────── -->
+    <section class="analytics-grid" aria-label="Analytics overview">
+      <div class="stat-card green">
+        <div class="stat-icon" aria-hidden="true">👥</div>
+        <div class="stat-info">
+          <h3 id="statTotal">0</h3>
+          <p>Total Patients</p>
+        </div>
+        <span class="stat-badge" id="statActive">0 active</span>
+      </div>
+        <div class="stat-card teal">
+          <div class="stat-icon" aria-hidden="true">🔁</div>
+          <div class="stat-info">
+            <h3 id="statFollowUps">0</h3>
+            <p>Total Follow‑ups</p>
+          </div>
+          <span class="stat-badge" id="statRevenue">₹0</span>
+          <button class="btn btn-primary btn-sm" id="payNowBtn" onclick="startRazorpayPayment()" style="margin-top:8px;">Pay Now</button>
+        </div>
+      <div class="stat-card purple">
+        <div class="stat-icon" aria-hidden="true">📊</div>
+        <div class="stat-info">
+          <h3 id="statReplyRate">0%</h3>
+          <p>Reply Rate</p>
+        </div>
+        <span class="stat-badge" id="statReplyBadge">engagement</span>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon" aria-hidden="true">📅</div>
+        <div class="stat-info">
+          <h3 id="statBooked">0</h3>
+          <p>Appts Booked</p>
+        </div>
+        <span class="stat-badge" id="statBookRate">0% rate</span>
+      </div>
+    </section>
+
+    <!-- ── Dashboard Grid ─────────────────────────────────────────────────── -->
+    <div class="dashboard-grid">
+
+      <!-- LEFT: Patients + Add Form -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+        <!-- Add Patient Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>➕</span> Add New Patient
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="toggleForm()" id="toggleFormBtn" aria-expanded="true" aria-controls="addPatientForm">
+              Collapse
+            </button>
+          </div>
+          <div class="card-body" id="addPatientForm">
+            <form id="patientForm" onsubmit="addPatient(event)" novalidate>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="patientName">Patient Name *</label>
+                  <input class="form-input" type="text" id="patientName" placeholder="e.g. Rohit Kumar" required autocomplete="name" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="patientPhone">WhatsApp Number *</label>
+                  <input class="form-input" type="tel" id="patientPhone" placeholder="+91XXXXXXXXXX" required autocomplete="tel" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="patientDoctor">Doctor Name</label>
+                  <input class="form-input" type="text" id="patientDoctor" placeholder="Dr. Sharma" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="patientCondition">Visit Type</label>
+                  <select class="form-input" id="patientCondition">
+                    <option value="General Checkup">General Checkup</option>
+                    <option value="Dental Cleaning">Dental Cleaning</option>
+                    <option value="Physiotherapy">Physiotherapy</option>
+                    <option value="Skin Consultation">Skin Consultation</option>
+                    <option value="Eye Checkup">Eye Checkup</option>
+                    <option value="Blood Test">Blood Test</option>
+                    <option value="Follow-up Visit">Follow-up Visit</option>
+                  </select>
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label" for="clinicName">Clinic Name</label>
+                  <input class="form-input" type="text" id="clinicName" placeholder="MediCare Wellness Clinic" value="MediCare Wellness Clinic" />
+                </div>
+              </div>
+              <div style="margin-top: 14px; display: flex; gap: 8px; align-items: center;">
+                <button type="submit" class="btn btn-primary" id="addPatientBtn">
+                  <span>💬</span> Start Follow-up Sequence
+                </button>
+                <span class="fs-12 text-muted">First WhatsApp message sent instantly</span>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Patient List Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>🏥</span> Active Patients
+            </div>
+            <div class="flex-center gap-2">
+              <div class="tab-bar" role="tablist">
+                <button class="tab-btn active" onclick="filterPatients('all')" id="tab-all" role="tab" aria-selected="true">All</button>
+                <button class="tab-btn" onclick="filterPatients('active')" id="tab-active" role="tab" aria-selected="false">Active</button>
+                <button class="tab-btn" onclick="filterPatients('replied')" id="tab-replied" role="tab" aria-selected="false">Replied</button>
+              </div>
+            </div>
+          </div>
+          <div id="patientsList">
+            <div class="empty-patients" id="emptyState">
+              <div class="empty-icon" aria-hidden="true">🏥</div>
+              <h3>No patients yet</h3>
+              <p>Add a patient above to start the follow-up sequence</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Chat Panel -->
+      <div class="card chat-panel" role="region" aria-label="Patient conversation">
+        <div class="card-header">
+          <div class="card-title">
+            <span>💬</span> Conversation
+          </div>
+          <div id="chatPatientName" class="fs-12 text-muted">Select a patient</div>
+        </div>
+
+        <div id="chatPatientInfo" style="display: none;">
+          <div class="chat-patient-info" id="chatPatientHeader">
+            <div class="avatar-lg" id="chatAvatar" aria-hidden="true"></div>
+            <div class="info">
+              <h4 id="chatNameHeader">—</h4>
+              <p id="chatSubHeader" style="font-size: 11px; color: var(--text-muted);">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages" role="log" aria-label="Message history" aria-live="polite">
+          <div class="chat-empty" id="chatEmptyState">
+            <div class="empty-icon" aria-hidden="true">💬</div>
+            <span>Select a patient to view conversation</span>
+          </div>
+        </div>
+
+        <div class="chat-actions" id="chatActions" style="display: none;">
+          <div class="chat-actions-label">Quick Actions</div>
+          <div class="chat-action-buttons">
+            <button class="btn btn-primary btn-sm" onclick="sendNextFollowUp()" id="sendNextBtn">
+              📤 Send Next Follow-up
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="deletePatient()" id="deletePatientBtn">
+              🗑️ Remove
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ── Setup Modal ─────────────────────────────────────────────────────────── -->
+<div id="setupModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; display:flex; align-items:center; justify-content:center; padding:1rem;" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
+  <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-xl); padding:2rem; max-width:520px; width:100%; max-height:90vh; overflow-y:auto;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+      <h2 id="modalTitle" style="font-size:18px; font-weight:700;">⚙️ Connect WhatsApp (Twilio)</h2>
+      <button onclick="closeSetupModal()" class="btn btn-ghost btn-sm" aria-label="Close setup modal">✕ Close</button>
+    </div>
+
+    <div class="setup-steps">
+      <div class="setup-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Sign up for Twilio (free)</strong><br>
+          Go to <a href="https://twilio.com" target="_blank" rel="noopener" style="color:var(--accent-green)">twilio.com</a> → Create free account → Get $15 trial credit
+        </div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Activate WhatsApp Sandbox</strong><br>
+          Console → Messaging → Try it out → Send a WhatsApp message<br>
+          Send <code>join &lt;your-keyword&gt;</code> from your WhatsApp to <code>+14155238886</code>
+        </div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Create your .env file</strong><br>
+          Copy <code>.env.example</code> → <code>.env</code><br>
+          Fill in <code>TWILIO_ACCOUNT_SID</code>, <code>TWILIO_AUTH_TOKEN</code>, and your WhatsApp number
+        </div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <strong>Install ngrok for webhooks</strong><br>
+          Download from <a href="https://ngrok.com" target="_blank" rel="noopener" style="color:var(--accent-green)">ngrok.com</a> → Run: <code>ngrok http 3000</code><br>
+          Copy the HTTPS URL → Set as Webhook in Twilio Sandbox settings
+        </div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">5</div>
+        <div class="step-text">
+          <strong>Restart the server</strong><br>
+          Run <code>npm start</code> — Real WhatsApp messages will now be sent! 🎉
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem; padding: 14px; background: var(--accent-green-dim); border: 1px solid var(--border-accent); border-radius: var(--radius-sm);">
+      <p style="font-size: 12.5px; color: var(--accent-green); font-weight: 600; margin-bottom: 4px;">💡 For Demo Purposes</p>
+      <p style="font-size: 12px; color: var(--text-secondary);">Even without Twilio, the dashboard fully simulates all message flows. Great for showing to clinics before you set up the live integration!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast Container ─────────────────────────────────────────────────────── -->
+<div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

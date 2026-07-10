@@ -1,0 +1,162 @@
+[
+  {
+    "id": "00815705-d63b-41e1-b87b-4fb16fbed522",
+    "name": "ram murthy",
+    "phone": "+917204635269",
+    "doctor": "dr namratha",
+    "clinic": "MediCare Wellness Clinic",
+    "visitDate": "2026-07-10T04:13:16.013Z",
+    "condition": "Skin Consultation",
+    "followUpStage": 2,
+    "status": "active",
+    "lastMessageAt": "2026-07-10T04:13:50.082Z",
+    "replied": false,
+    "lastReply": null,
+    "appointmentBooked": false,
+    "messages": [
+      {
+        "from": "bot",
+        "text": "Hi ram murthy! 👋 Hope your visit with dr namratha went well today at MediCare Wellness Clinic.\n\nHow are you feeling after your skin consultation visit? Reply anytime — we're here to help! 😊",
+        "time": "2026-07-10T04:13:16.025Z"
+      },
+      {
+        "from": "bot",
+        "text": "Good morning ram murthy! ☀️\n\nThis is a gentle reminder from MediCare Wellness Clinic.\n\n📋 Please remember to:\n• Take your medications as prescribed by dr namratha\n• Stay hydrated and rest well\n• Avoid strenuous activity if advised\n\nReply with any questions or if you feel unwell. We're here! 💊",
+        "time": "2026-07-10T04:13:50.082Z"
+      }
+    ]
+  },
+  {
+    "id": "p001",
+    "name": "Priya Sharma",
+    "phone": "+919876543210",
+    "doctor": "Dr. Arjun Mehta",
+    "clinic": "MediCare Wellness Clinic",
+    "visitDate": "2026-07-01T10:30:00.000Z",
+    "condition": "General Checkup",
+    "followUpStage": 2,
+    "status": "active",
+    "lastMessageAt": "2026-07-02T08:00:00.000Z",
+    "replied": true,
+    "lastReply": "Feeling much better, thank you!",
+    "appointmentBooked": false,
+    "messages": [
+      {
+        "from": "bot",
+        "text": "Hi Priya! 👋 Hope your visit with Dr. Arjun Mehta went well today. How are you feeling after your checkup?",
+        "time": "2026-07-01T13:00:00.000Z"
+      },
+      {
+        "from": "patient",
+        "text": "Feeling much better, thank you!",
+        "time": "2026-07-01T13:45:00.000Z"
+      },
+      {
+        "from": "bot",
+        "text": "That's wonderful to hear! 😊 Remember to take your medicines as prescribed by Dr. Mehta. Reply HELP if you have any concerns.",
+        "time": "2026-07-02T08:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "p002",
+    "name": "Rahul Verma",
+    "phone": "+919812345678",
+    "doctor": "Dr. Sneha Kapoor",
+    "clinic": "MediCare Wellness Clinic",
+    "visitDate": "2026-06-30T14:00:00.000Z",
+    "condition": "Dental Cleaning",
+    "followUpStage": 3,
+    "status": "active",
+    "lastMessageAt": "2026-07-02T09:00:00.000Z",
+    "replied": false,
+    "lastReply": null,
+    "appointmentBooked": false,
+    "messages": [
+      {
+        "from": "bot",
+        "text": "Hi Rahul! 👋 Hope your dental cleaning with Dr. Sneha went smoothly! Any sensitivity or discomfort?",
+        "time": "2026-06-30T17:00:00.000Z"
+      },
+      {
+        "from": "bot",
+        "text": "Quick reminder: Avoid very hot or cold drinks for 24 hours after your cleaning. How are you doing?",
+        "time": "2026-07-01T09:00:00.000Z"
+      },
+      {
+        "from": "bot",
+        "text": "Hi Rahul! It's been 3 days since your visit. Would you like to schedule your next cleaning appointment? Reply YES to book or CALL to speak with us.",
+        "time": "2026-07-02T09:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "p003",
+    "name": "Anjali Patel",
+    "phone": "+918765432109",
+    "doctor": "Dr. Rohit Singh",
+    "clinic": "MediCare Wellness Clinic",
+    "visitDate": "2026-06-28T11:00:00.000Z",
+    "condition": "Physiotherapy",
+    "followUpStage": 4,
+    "status": "completed",
+    "lastMessageAt": "2026-07-02T10:00:00.000Z",
+    "replied": true,
+    "lastReply": "Yes, I'd like to book next week please!",
+    "appointmentBooked": true,
+    "messages": [
+      {
+        "from": "bot",
+        "text": "Hi Anjali! 👋 How did your physiotherapy session with Dr. Rohit go? Any soreness is normal!",
+        "time": "2026-06-28T14:00:00.000Z"
+      },
+      {
+        "from": "patient",
+        "text": "It was great! A bit sore but in a good way.",
+        "time": "2026-06-28T15:30:00.000Z"
+      },
+      {
+        "from": "bot",
+        "text": "Perfect! That soreness means the therapy is working 💪 Don't forget your home exercises. See you next session!",
+        "time": "2026-06-29T08:00:00.000Z"
+      },
+      {
+        "from": "bot",
+        "text": "Hi Anjali! Time for your follow-up appointment. Would you like to book for next week?",
+        "time": "2026-07-02T10:00:00.000Z"
+      },
+      {
+        "from": "patient",
+        "text": "Yes, I'd like to book next week please!",
+        "time": "2026-07-02T10:15:00.000Z"
+      },
+      {
+        "from": "bot",
+        "text": "✅ Appointment confirmed for next week! You'll receive a reminder 24 hours before. See you then!",
+        "time": "2026-07-02T10:16:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "78679cef-c526-47de-8720-ccb56d7652d1",
+    "name": "ram murthy",
+    "phone": "+917204635269",
+    "doctor": "dr namratha",
+    "clinic": "MediCare Wellness Clinic",
+    "visitDate": "2026-07-10T04:39:00.104Z",
+    "condition": "General Checkup",
+    "followUpStage": 1,
+    "status": "active",
+    "lastMessageAt": "2026-07-10T04:39:02.185Z",
+    "replied": false,
+    "lastReply": null,
+    "appointmentBooked": false,
+    "messages": [
+      {
+        "from": "bot",
+        "text": "Hi ram murthy! 👋 Hope your visit with dr namratha went well today at Your Clinic Name ✅.\n\nHow are you feeling after your general checkup visit? Reply anytime — we're here to help! 😊\n🖼️ https://example.com/logo.png",
+        "time": "2026-07-10T04:39:02.185Z"
+      }
+    ]
+  }
+]
